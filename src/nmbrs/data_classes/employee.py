@@ -57,7 +57,10 @@ class ScheduleAll(DataClass):
 
     def __init__(self, employee_id: int, data: dict):
         self.employee_id = employee_id
-        self.schedule_calc_method: str = data.get("ScheduleCalcMethod")
+        self.id: int = data.get("Id")
+        self.StartDate: datetime = data.get("StartDate")
+        self.CreationDate: datetime = data.get("CreationDate")
+        self.ParttimePercentage: Decimal = data.get("ParttimePercentage")
         self.hours_monday: Decimal = data.get("HoursMonday")
         self.hours_tuesday: Decimal = data.get("HoursTuesday")
         self.hours_wednesday: Decimal = data.get("HoursWednesday")
@@ -72,7 +75,6 @@ class ScheduleAll(DataClass):
         self.hours_friday2: Decimal = data.get("HoursFriday2")
         self.hours_saturday2: Decimal = data.get("HoursSaturday2")
         self.hours_sunday2: Decimal = data.get("HoursSunday2")
-
 
 class Schedule(DataClass):
     """A class representing a schedule."""
