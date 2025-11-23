@@ -30,14 +30,15 @@ class EmployeeWageTaxService(MicroService):
         raise NotImplementedError()  # pragma: no cover
 
     @nmbrs_exception_handler(resource="EmployeeService:WageTax_GetCurrent")
-    def get_current(self):
+    def get_current(self, employee_id: int):
         """
         Get the currently active loonheffing settings.
 
         For more information, refer to the official documentation:
             [WageTax_GetCurrent](https://api.nmbrs.nl/soap/v3/EmployeeService.asmx?op=WageTax_GetCurrent)
         """
-        raise NotImplementedError()  # pragma: no cover
+        wagetax = self.client.service.WageTax_GetCurrent(EmployeeId=employee_id, _soapheaders=self.auth_manager.header)
+        return WageTax(employee_id=employee_id, data=serialize_object(wagetax))
 
     @nmbrs_exception_handler(resource="EmployeeService:WageTax_GetList")
     def get_all(self, employee_id: int):
