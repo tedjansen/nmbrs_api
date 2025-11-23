@@ -3,9 +3,11 @@
 import logging
 
 from zeep import Client
+from zeep.helpers import serialize_object
 
 from ..micro_service import MicroService
 from ....auth.token_manager import AuthManager
+from ....data_classes.employee import WageTax
 from ....utils.nmbrs_exception_handler import nmbrs_exception_handler
 
 logger = logging.getLogger(__name__)
@@ -38,15 +40,20 @@ class EmployeeWageTaxService(MicroService):
         raise NotImplementedError()  # pragma: no cover
 
     @nmbrs_exception_handler(resource="EmployeeService:WageTax_GetList")
-    def get_all(self):
+    def get_all(self, employee_id: int):
         """
         Get a list of all loonheffing settings.
 
         For more information, refer to the official documentation:
             [WageTax_GetList](https://api.nmbrs.nl/soap/v3/EmployeeService.asmx?op=WageTax_GetList)
         """
-        raise NotImplementedError()  # pragma: no cover
-
+        wagetaxes = self.client.service.WageTax_GetList(EmployeeId=employee_id, _soapheaders=self.auth_manager.header)
+        wagetaxes = serialize_object(wagetaxes)
+        _wagetaxes = []
+        for result in wagetaxes:
+            _wagetaxes.append(WageTax(employee_id=employee_id, data=result))
+        return _wagetaxes
+    
     @nmbrs_exception_handler(resource="EmployeeService:WageTax_Get_SE")
     def get_settings(self):
         """
